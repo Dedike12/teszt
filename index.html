@@ -1,43 +1,41 @@
-
 <!DOCTYPE html>
 <html lang="hu">
-<head>
+<head> 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DediPlex – Film / Sorozat kérés</title>
+  <title>Film/Sorozat kérés Plex szerverre</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <!-- EmailJS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("EBvaCSqGo_4lt8Eb9");
+    })();
+  </script>
 </head>
 <body>
-  <main class="container">
-    <h1>DediPlex – Kérés beküldése</h1>
+  <div class="animated-bg"></div>
+  <div class="container">
+    <h1>🎬 Film/Sorozat kérés</h1>
+    <p class="subtitle">Küldd el, mit szeretnél látni a Plexen!</p>
+    <form id="filmForm">
+      <label for="title">Cím:</label>
+      <input type="text" id="title" name="title" placeholder="Pl. Kincs ami nincs" autocomplete="off" required />
 
-    <form id="request-form">
-      <label>Cím*</label>
-      <input type="text" id="title" placeholder="Pl. Interstellar" required />
-
-      <label>Típus*</label>
-      <select id="type" required>
-        <option value="" disabled selected>Válassz...</option>
+      <label for="type">Típus:</label>
+      <select id="type" name="type" required>
+        <option value="">-- Válassz --</option>
         <option value="Film">Film</option>
         <option value="Sorozat">Sorozat</option>
       </select>
 
-      <label>Üzenet (opcionális)</label>
-      <textarea id="message" rows="3" placeholder="Egyéb megjegyzés..."></textarea>
+      <label for="message">Üzenet (opcionális):</label>
+      <textarea id="message" name="message" placeholder="Pl. csak a sorozat első része kell, magyar felirattal stb..."></textarea>
 
       <button type="submit">Küldés</button>
-      <p id="response-box"></p>
     </form>
-
-    <section class="request-list-container">
-      <h2>Korábbi kérések</h2>
-      <ul id="request-list" class="req-list"></ul>
-      <p id="no-req" class="no-req-msg">Nincs még rögzített kérés.</p>
-    </section>
-  </main>
-
+    <p id="statusMessage" class="status"></p>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Korábbi kérések</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Korábbi film- és sorozatkérések</h1>
+    <table id="requestsTable">
+        <thead>
+            <tr>
+                <th>Időpont</th>
+                <th>Típus</th>
+                <th>Cím</th>
+                <th>Megjegyzés</th>
+                <th>Állapot</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        fetch("https://script.google.com/macros/s/AKfycbw7lMx08yYQUnddKSXNcm1dp20_BFYn5WaxY-tU8Ra1_T1OXcQKt1ajsei6_4UY8i5O/exec")
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector("#requestsTable tbody");
+                data.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>\${item["Időbélyeg"]}</td>
+                        <td>\${item["Típus"]}</td>
+                        <td>\${item["Cím"]}</td>
+                        <td>\${item["Megjegyzés"]}</td>
+                        <td>\${item["Állapot"]}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+    </script>
+</body>
+</html>

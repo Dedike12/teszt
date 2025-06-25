@@ -1,14 +1,92 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: url("https://i.pinimg.com/originals/1d/30/b5/1d30b5a0c298c02edaf2f501b22a6587.gif") no-repeat center center fixed;
+  background-size: cover;
+  color: #f0f0f0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
 
-body{margin:0;background:#121212;color:#f1f1f1;font-family:Arial,Helvetica,sans-serif;display:flex;justify-content:center}
-.container{max-width:600px;padding:2rem;width:100%}
-h1{text-align:center;margin-top:0}
-form{display:flex;flex-direction:column;gap:.75rem}
-input,select,textarea{padding:.6rem;border-radius:6px;border:1px solid #555;background:#1e1e1e;color:#f1f1f1}
-button{padding:.6rem;border:none;border-radius:6px;background:#2196f3;color:#fff;font-weight:600;cursor:pointer}
-button:hover{background:#1c7ed6}
-#response-box{min-height:1.2rem;font-size:.9rem;text-align:center}
-.request-list-container{margin-top:2rem;background:#1a1a1a;padding:1rem;border-radius:8px}
-.request-list-container h2{text-align:center;margin:0 0 .5rem}
-.req-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.7rem;font-size:.95rem}
-.req-list li{background:#262626;padding:.6rem;border-radius:6px}
-.no-req-msg{text-align:center;font-size:.85rem;color:#bbb;margin:0}
+.container {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  max-width: 450px;
+  width: 90%;
+  z-index: 1;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #cccccc;
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444;
+  border-radius: 10px;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+textarea {
+  min-height: 80px;
+}
+
+button {
+  margin-top: 24px;
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  background-color: #2196f3;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #1976d2;
+}
+
+.status {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.success {
+  color: #4caf50;
+}
+
+.error {
+  color: #ff5252;
+}
