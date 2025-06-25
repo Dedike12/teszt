@@ -1,47 +1,79 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("requestForm");
-    if (!form) return; // Ha nincs form az oldalon, kilépünk
+/* ----------  BEÁLLÍTÁSOK  ---------- */
+const SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbwn0MwGZRq6yX88-F4pC-KXe_hh6X94h2Eh669UkaeRm1miRTXW2QfQewThk4ihBH58cw/exec";
 
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        const type = document.getElementById("type").value;
-        const title = document.getElementById("title").value;
-        const note = document.getElementById("note").value;
-        const submitBtn = form.querySelector("button[type='submit']");
+const EMAIL_SERVICE_ID = "service_g1117fv";
+const EMAIL_TEMPLATE_ID = "template_7slhllf";
 
-        // Visszajelző mező
-        let feedback = document.getElementById("feedback");
-        if (!feedback) {
-            feedback = document.createElement("div");
-            feedback.id = "feedback";
-            feedback.style.marginTop = "10px";
-            form.appendChild(feedback);
-        }
+/* ==========  KÉRÉS BEKÜLDÉSE  ========== */
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("requestForm");
+  if (!form) return;                       // csak az index oldalon létezik
 
-        feedback.textContent = "Beküldés folyamatban...";
-        feedback.style.color = "#444";
-        submitBtn.disabled = true;
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        fetch("https://script.google.com/macros/s/AKfycbw7lMx08yYQUnddKSXNcm1dp20_BFYn5WaxY-tU8Ra1_T1OXcQKt1ajsei6_4UY8i5O/exec", {
-            method: "POST",
-            body: JSON.stringify({ type, title, note }),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(res => {
-            if (res.ok) {
-                feedback.textContent = "✅ Kérés elküldve!";
-                feedback.style.color = "green";
-                form.reset();
-            } else {
-                feedback.textContent = "❌ Hiba történt a beküldés során.";
-                feedback.style.color = "red";
-            }
-        }).catch(error => {
-            feedback.textContent = "❌ Hálózati hiba: " + error;
-            feedback.style.color = "red";
-        }).finally(() => {
-            submitBtn.disabled = false;
-        });
-    });
+    const formData = new FormData(form);
+    const title   = formData.get("title")?.trim();
+    const type    = formData.get("type") || "Film";
+    const message = formData.get("message")?.trim() || "-";
+    const date    = new Date().toLocaleDateString("hu-HU");
+
+    if (!title) {
+      alert("Adj meg egy címet!");         // egyszerű ellenőrzés
+      return;
+    }
+
+    const payload = { title, type, date };
+
+    try {
+      /* 1️⃣  MENTÉS A GOOGLE-SCRIPTHEZ */
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error(await res.text());
+
+      /* 2️⃣  E-MAIL KÜLDÉSE AUTEJES ADATTAL  */
+      await emailjs.send(EMAIL_SERVICE_ID, EMAIL_TEMPLATE_ID, {
+        title,
+        type,
+        message,
+        date
+      });
+
+      alert("Kérés elmentve, e-mail értesítés elküldve. Köszönjük!");
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      alert("Hiba történt a mentés vagy az e-mail küldése közben.");
+    }
+  });
 });
+
+/* ==========  KORÁBBI KÉRÉSEK BETÖLTÉSE  ========== */
+async function loadRequests() {
+  try {
+    const res = await fetch(SCRIPT_URL);
+    if (!res.ok) throw new Error(await res.text());
+    const list = await res.json();
+
+    const tbody = document.querySelector("#requestTable tbody");
+    list.forEach((req) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${req.title}</td>
+        <td>${req.type}</td>
+        <td>${req.date}</td>
+        <td>${req.status}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+if (document.getElementById("requestTable")) {
+  loadRequests();
+}

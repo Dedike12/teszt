@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Korábbi kérések</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Korábbi kérések</h1>
+        <table id="requestTable">
+            <thead>
+                <tr>
+                    <th>Cím</th>
+                    <th>Típus</th>
+                    <th>Dátum</th>
+                    <th>Státusz</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <a href="index.html" class="btn">Vissza a főoldalra</a>
+    </div>
+
+    <script>
+        fetch('requests.json')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector("#requestTable tbody");
+            data.forEach(request => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${request.title}</td>
+                    <td>${request.type}</td>
+                    <td>${request.date}</td>
+                    <td>${request.status}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        });
+    </script>
+	<script src="script.js"></script>
+	<script>
+</body>
+</html>
