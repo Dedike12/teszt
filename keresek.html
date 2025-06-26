@@ -1,45 +1,41 @@
+
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <title>Korábbi kérések</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Korábbi kérések</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Korábbi kérések</h1>
-        <table id="requestTable">
-            <thead>
-                <tr>
-                    <th>Cím</th>
-                    <th>Típus</th>
-                    <th>Dátum</th>
-                    <th>Státusz</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <a href="index.html" class="btn">Vissza a főoldalra</a>
-    </div>
+  <div class="container">
+    <h1>📋 Korábbi kérések</h1>
+    <div id="kartyaLista" class="kartya-lista"></div>
+    <a href="index.html" style="color: #90caf9; display: block; text-align: center; margin-top: 20px;">⬅️ Vissza a főoldalra</a>
+  </div>
 
-    <script>
-        fetch('requests.json')
-        .then(response => response.json())
-        .then(data => {
-            const tbody = document.querySelector("#requestTable tbody");
-            data.forEach(request => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${request.title}</td>
-                    <td>${request.type}</td>
-                    <td>${request.date}</td>
-                    <td>${request.status}</td>
-                `;
-                tbody.appendChild(row);
-            });
+  <script>
+    fetch("load_requests.php")
+      .then(resp => resp.json())
+      .then(data => {
+        const lista = document.getElementById("kartyaLista");
+        data.forEach(req => {
+          const kartya = document.createElement("div");
+          kartya.className = "kartya";
+          kartya.innerHTML = `
+            <p>🎬 <strong>Cím:</strong> ${req.title}</p>
+            <p>📁 <strong>Típus:</strong> ${req.type}</p>
+            <p>📌 <strong>Állapot:</strong> ${req.status}</p>
+            <p>📅 <strong>Dátum:</strong> ${req.date}</p>
+          `;
+          lista.appendChild(kartya);
         });
-    </script>
-	<script src="script.js"></script>
-	<script>
+      })
+      .catch(() => {
+        document.getElementById("kartyaLista").innerHTML =
+          "<p style='color:red;'>❌ Hiba történt a kérések betöltésekor.</p>";
+      });
+  </script>
 </body>
 </html>

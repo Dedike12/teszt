@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-<form id="requestForm">
 <html lang="hu">
-<head> 
-  <meta charset="UTF-8" />
+<head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Film/Sorozat kérés Plex szerverre</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins&display=swap" rel="stylesheet">
+  <title>Film / Sorozat kérés</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    (function() {
+    (function () {
       emailjs.init("EBvaCSqGo_4lt8Eb9");
     })();
   </script>
+  <link rel="icon" href="favicon.png" type=image/png">
 </head>
 <body>
-  <div class="animated-bg"></div>
   <div class="container">
-    <h1>🎬 Film/Sorozat kérés</h1>
+    <h1>🎬 Film / Sorozat kérés</h1>
     <p class="subtitle">Küldd el, mit szeretnél látni a Plexen!</p>
     <form id="filmForm">
       <label for="title">Cím:</label>
@@ -31,12 +30,12 @@
       </select>
 
       <label for="message">Üzenet (opcionális):</label>
-      <textarea id="message" name="message" placeholder="Pl. csak a sorozat első része kell, magyar felirattal stb..."></textarea>
+      <textarea id="message" name="message" placeholder="Pl. csak a sorozat első része szükséges, magyar felirattal stb..."></textarea>
 
       <button type="submit">Küldés</button>
     </form>
-<a href="keresek.html" class="btn">📋 Korábbi kérések megtekintése</a>
-    <p id="statusMessage" class="status"></p>
+    <p class="status" id="statusMessage"></p>
+    <a href="keresek.html" style="color: #90caf9; display: block; text-align: center; margin-top: 20px;">📋 Korábbi kérések</a>
   </div>
   <script src="script.js"></script>
 </body>

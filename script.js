@@ -1,81 +1,54 @@
-const SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbwn0MwGZRq6yX88-F4pC-KXe_hh6X94h2Eh669UkaeRm1miRTXW2QfQewThk4ihBH58cw/exec";
 
-const EMAIL_SERVICE_ID = "service_g1117fv";
-const EMAIL_TEMPLATE_ID = "template_7slhllf";
+document.getElementById("filmForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+  const statusMessage = document.getElementById("statusMessage");
+  const title = document.getElementById("title").value.trim();
+  const type = document.getElementById("type").value;
+  const message = document.getElementById("message").value.trim();
+  const date = new Date().toLocaleString("hu-HU");
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("requestForm");
-  if (!form) return;
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    // csak most kérjük le a mezőket!
-    const titleField = document.getElementById("title");
-    const typeField = document.getElementById("type");
-    const messageField = document.getElementById("message");
-
-    const title = titleField?.value.trim();
-    const type = typeField?.value || "Film";
-    const message = messageField?.value.trim() || "-";
-    const date = new Date().toLocaleDateString("hu-HU");
-
-    if (!title) {
-      alert("Adj meg egy címet!");
-      return;
-    }
-
-    const payload = { title, type, date };
-
-    try {
-      // 1️⃣ Google Táblázatba mentés
-      const res = await fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error(await res.text());
-
-      // 2️⃣ EmailJS küldés
-      await emailjs.send(EMAIL_SERVICE_ID, EMAIL_TEMPLATE_ID, {
-        title,
-        type,
-        message,
-        date,
-      });
-
-      alert("Kérés elmentve és e-mail elküldve. Köszönöm!");
-      form.reset();
-    } catch (err) {
-      console.error("Hiba:", err);
-      alert("Hiba történt a mentés vagy e-mail küldés közben.");
-    }
-  });
-
-  // kéréslista betöltése ha van ilyen táblázat az oldalon
-  if (document.getElementById("requestTable")) {
-    loadRequests();
+  if (!title) {
+    showStatusMessage("❌ A cím kitöltése kötelező.");
+    return;
   }
+
+  const requestData = { title, type, message, date, status: "Feldolgozás alatt" };
+  fetch("save_request.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      emailjs.send("service_g1117fv", "template_7slhllf", {
+        title, type, message, date
+      }).then(() => {
+        showStatusMessage("✅ Kérés sikeresen elküldve!");
+        document.getElementById("filmForm").reset();
+      }).catch(() => {
+        showStatusMessage("❌ Az e-mail küldése nem sikerült, de a kérés mentésre került.");
+      });
+    } else {
+      showStatusMessage("❌ Hiba történt a mentés során. Kérjük, próbáld újra.");
+    }
+  })
+  .catch(() => {
+    showStatusMessage("❌ Hálózati hiba történt. Kérjük, próbáld újra.");
+  });
 });
 
-async function loadRequests() {
-  try {
-    const res = await fetch(SCRIPT_URL);
-    if (!res.ok) throw new Error(await res.text());
-    const list = await res.json();
+function showStatusMessage(text) {
+  const statusMessage = document.getElementById("statusMessage");
+  statusMessage.innerText = text;
+  statusMessage.style.opacity = "1";
+  statusMessage.style.transition = "opacity 1s ease";
 
-    const tbody = document.querySelector("#requestTable tbody");
-    list.forEach((req) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${req.title}</td>
-        <td>${req.type}</td>
-        <td>${req.date}</td>
-        <td>${req.status}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  } catch (err) {
-    console.error("Hiba a lista betöltésekor:", err);
-  }
+  setTimeout(() => {
+    statusMessage.style.opacity = "0";
+  }, 4000);
+
+  setTimeout(() => {
+    statusMessage.innerText = "";
+  }, 5000);
 }

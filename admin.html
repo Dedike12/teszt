@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Filmkérések</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-controls select, .admin-controls button {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const jelszo = prompt("Add meg a jelszót az adminfelülethez:");
+    if (jelszo !== "NokiA3410nas") {
+      alert("Hibás jelszó!");
+      window.location.href = "index.html";
+    }
+  </script>
+
+  <div class="container">
+    <h1>🔐 Adminfelület</h1>
+    <input type="text" id="searchInput" placeholder="Keresés címre vagy típusra..." style="width:100%;padding:10px;margin-bottom:15px;border-radius:10px;border:1px solid #ccc;">
+    <form id="adminForm">
+      <table style="width:100%;color:#f0f0f0;">
+        <thead>
+          <tr>
+            <th>Cím</th>
+            <th>Típus</th>
+            <th>Állapot</th>
+            <th>Dátum</th>
+            <th>Művelet</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+      <button type="submit" style="margin-top:20px;">💾 Mentés</button>
+    </form>
+    <a href="index.html" style="color: #90caf9; display: block; text-align: center; margin-top: 20px;">⬅️ Vissza</a>
+  </div>
+
+  <script>
+    let data = [];
+
+    fetch("load_requests.php")
+      .then(resp => resp.json())
+      .then(json => {
+        data = json;
+        renderTable(data);
+      });
+
+    function renderTable(data) {
+      const tbody = document.getElementById("adminTableBody");
+      tbody.innerHTML = "";
+      data.forEach((req, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${req.title}</td>
+          <td>${req.type}</td>
+          <td>
+            <select name="status-${i}">
+              <option value="Feldolgozás alatt"${req.status === "Feldolgozás alatt" ? " selected" : ""}>Feldolgozás alatt</option>
+              <option value="Elfogadva"${req.status === "Elfogadva" ? " selected" : ""}>Elfogadva</option>
+              <option value="Elutasítva"${req.status === "Elutasítva" ? " selected" : ""}>Elutasítva</option>
+              <option value="Letöltve"${req.status === "Letöltve" ? " selected" : ""}>Letöltve</option>
+            </select>
+          </td>
+          <td>${req.date}</td>
+          <td><button type="button" onclick="deleteRow(${i})">🗑️ Törlés</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function deleteRow(index) {
+      if (confirm("Biztosan törölni szeretnéd ezt a sort?")) {
+        data.splice(index, 1);
+        renderTable(data);
+      }
+    }
+
+    document.getElementById("adminForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const newData = data.map((item, i) => ({
+        ...item,
+        status: document.querySelector(`[name='status-${i}']`).value
+      }));
+      fetch("update.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newData)
+      })
+      .then(resp => resp.json())
+      .then(res => {
+        if (res.success) alert("✅ Mentve!");
+        else alert("❌ Hiba: " + res.error);
+      });
+    });
+
+    document.getElementById("searchInput").addEventListener("input", function() {
+      const q = this.value.toLowerCase();
+      const filtered = data.filter(item =>
+        item.title.toLowerCase().includes(q) || item.type.toLowerCase().includes(q)
+      );
+      renderTable(filtered);
+    });
+  </script>
+</body>
+</html>

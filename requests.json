@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "title": "sdsa",
+        "type": "Film",
+        "message": "dsadsa",
+        "date": "2025. 06. 26. 10:54:13",
+        "status": "Feldolgozás alatt"
+    },
+    {
+        "title": "dsasd",
+        "type": "Film",
+        "message": "dsadsa",
+        "date": "2025. 06. 26. 11:02:14",
+        "status": "Feldolgozás alatt"
+    }
+]

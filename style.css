@@ -3,7 +3,7 @@ body {
   font-family: 'Poppins', sans-serif;
   background: url("https://i.pinimg.com/originals/1d/30/b5/1d30b5a0c298c02edaf2f501b22a6587.gif") no-repeat center center fixed;
   background-size: cover;
-  color: #f0f0f0;
+  color: #ffffff;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -89,4 +89,63 @@ button:hover {
 
 .error {
   color: #ff5252;
+}
+@media (max-width: 600px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody tr {
+    margin-bottom: 15px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.05);
+    padding: 10px;
+  }
+
+  td {
+    padding: 10px;
+    text-align: left;
+    position: relative;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #90caf9;
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+
+.kartya-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.kartya {
+  margin-bottom: 15px;
+  background-color: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  color: #ffffff;
+}
+
+.kartya p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+}
+
+
+#statusMessage {
+  opacity: 0;
+  transition: opacity 1s ease;
 }
